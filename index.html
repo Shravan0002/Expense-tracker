@@ -10,18 +10,18 @@
         <h2>ADD EXPENSE</h2>
 
         <form>
-            <lable>add discription: </lable>
-            <input type="text">
+            <lable>Add description: </lable>
+            <input type="text" id="description">
 
             <br><br>
 
             <lable>Amount: </lable>
-            <input type="text">
+            <input type="number" id="amount">
 
             <br><br>
 
             <label>Category:</label>
-                <select>
+                <select id="Category">
                     <option>food</option>
                     <option>transport</option>
                     <option>shopping</option>
@@ -32,16 +32,16 @@
                 <br><br>
 
                 <label>Date:</label>
-                <input type="date">
+                <input type="date" id="date">
 
                 <br><br>
 
-                <button type="submit">+add expense</button>
+                <button type="submit" id="addexpense">+Add expense</button>
 
         </form>
         <h2>Your Expense</h2>
 
-        <ul>
+        <ul id="expenseList">
             <li>Lunch - 250</li>
             <li>Bus - 40</li>
             <li>book - 550</li>
@@ -62,5 +62,6 @@
 
 </div>
         </div>
+        <script src="script.js"></script>
     </body>
 </html>
