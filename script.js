@@ -5,6 +5,11 @@ let dateInput = document.getElementById("date");
 let expenseList = document.getElementById("expenseList");
 let button = document.getElementById("addexpense");
 let totalElement = document.getElementById("Total");
+let totalSpentElement = document.getElementById("totalSpent");
+let budgetLeftElement = document.getElementById("budgetLeft");
+
+let budget = 25000;
+
 let expenses = [];
 let Total=840;
 
@@ -16,6 +21,17 @@ button.addEventListener("click",function(event){
     let Category = CategoryInput.value;
     let date = dateInput.value;
 
+    if(description===""){
+        alert("plz enter a description!");
+        return;
+    }
+
+    if(amount<=0){
+        alert("amount must be greater than zero");
+        return;
+    }
+
+
     let expense = {
         description:description,
         amount:amount,
@@ -26,16 +42,25 @@ button.addEventListener("click",function(event){
     expenses.push(expense);
     displayExpenses();
 
+    descriptionInput.value = "";
+    amountInput.value = "";
+    dateInput.value = "";
+
 });
 
 function updateTotal(){
 
-    let Total = 0;
+    let total = 0;
 
     for(let expense of expenses){
-        Total=Total+expense.amount;
+        total=total+expense.amount;
     }
-    totalElement.textContent = Total;
+    totalElement.textContent = total;
+    totalSpentElement.textContent = total;
+
+    let budgetLeft = budget - total;
+
+    budgetLeftElement.textContent = budgetLeft;
 }
 
 function displayExpenses(){
@@ -45,7 +70,8 @@ function displayExpenses(){
         let expense = expenses[i];
         let newExpense = document.createElement("li");
 
-        newExpense.textContent = expense.description + " | " + expense.Category +  " | ₹"+ expense.amount;
+        newExpense.textContent = expense.description + " | " + expense.Category +  " | ₹"+ expense.amount +" | " +
+    expense.date;
         let deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
         deleteButton.addEventListener("click",function(){
