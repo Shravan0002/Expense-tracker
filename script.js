@@ -1,7 +1,10 @@
 let descriptionInput = document.getElementById("description");
 let amountInput = document.getElementById("amount");
 let CategoryInput = document.getElementById("Category");
+
 let dateInput = document.getElementById("date");
+dateInput.max = new Date().toISOString().split("T")[0];
+
 let expenseList = document.getElementById("expenseList");
 let button = document.getElementById("addexpense");
 let totalElement = document.getElementById("Total");
@@ -9,11 +12,11 @@ let totalSpentElement = document.getElementById("totalSpent");
 let budgetLeftElement = document.getElementById("budgetLeft");
 
 let budget = 25000;
-
+let budgetLeft = budget;
 let expenses = [];
-let Total=840;
 
-button.addEventListener("click",function(event){
+
+button.addEventListener("click", function(event) {
     event.preventDefault();
 
     let description = descriptionInput.value;
@@ -21,22 +24,31 @@ button.addEventListener("click",function(event){
     let Category = CategoryInput.value;
     let date = dateInput.value;
 
-    if(description===""){
+    if (description === "") {
         alert("plz enter a description!");
         return;
     }
 
-    if(amount<=0){
+    if (amount <= 0) {
         alert("amount must be greater than zero");
         return;
     }
 
+    if (amount > budgetLeft) {
+        alert("Expense cannot exceed the remaining budget");
+        return;
+    }
+
+    if (date === "") {
+        alert("Please select a date");
+        return;
+    }
 
     let expense = {
-        description:description,
-        amount:amount,
-        Category:Category,
-        date:date
+        description: description,
+        amount: amount,
+        Category: Category,
+        date: date
     };
 
     expenses.push(expense);
@@ -45,45 +57,65 @@ button.addEventListener("click",function(event){
     descriptionInput.value = "";
     amountInput.value = "";
     dateInput.value = "";
-
 });
 
-function updateTotal(){
+
+function updateTotal() {
 
     let total = 0;
 
-    for(let expense of expenses){
-        total=total+expense.amount;
+    for (let expense of expenses) {
+        total = total + expense.amount;
     }
+
     totalElement.textContent = total;
     totalSpentElement.textContent = total;
 
-    let budgetLeft = budget - total;
+    budgetLeft = budget - total;
 
     budgetLeftElement.textContent = budgetLeft;
 }
 
-function displayExpenses(){
+
+function displayExpenses() {
+
     expenseList.innerHTML = "";
 
-    for(let i = 0; i < expenses.length;i++){
+    for (let i = 0; i < expenses.length; i++) {
+
         let expense = expenses[i];
+
+        let expenseDate = new Date(expense.date + "T00:00:00");
+
+        let formattedDate = expenseDate.toLocaleDateString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+
         let newExpense = document.createElement("li");
 
-        newExpense.textContent = expense.description + " | " + expense.Category +  " | ₹"+ expense.amount +" | " +
-    expense.date;
+        newExpense.textContent =
+            expense.description +
+            " | " +
+            expense.Category +
+            " | ₹" +
+            expense.amount +
+            " | " +
+            formattedDate;
+
         let deleteButton = document.createElement("button");
+
         deleteButton.textContent = "Delete";
-        deleteButton.addEventListener("click",function(){
-            expenses.splice(i,1);
+
+        deleteButton.addEventListener("click", function() {
+            expenses.splice(i, 1);
             displayExpenses();
         });
+
         newExpense.appendChild(deleteButton);
         expenseList.appendChild(newExpense);
     }
+
     updateTotal();
 }
-
-
-
-
