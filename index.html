@@ -22,11 +22,11 @@
 
             <label>Category:</label>
                 <select id="Category">
-                    <option>food</option>
-                    <option>transport</option>
-                    <option>shopping</option>
-                    <option>entertainment</option>
-                    <option>recharge</option>
+                    <option>Food</option>
+                    <option>Travel</option>
+                    <option>Shopping</option>
+                    <option>Entertainment</option>
+                    <option>Recharge</option>
                 </select>
 
                 <br><br>
@@ -39,6 +39,15 @@
                 <button type="submit" id="addexpense">+Add expense</button>
 
         </form>
+        <input type="text" id="searchInput" placeholder="search expenses...">
+        <select id="categoryFilter">
+            <option value="all">All Categories</option>
+            <option value="Food">Food</option>
+            <option value="Travel">Travel</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Recharge">Recharge</option>
+            <option value="Entertainment">Entertainment</option>
+        </select>
         <h2>Your Expense</h2>
 
         <ul id="expenseList">

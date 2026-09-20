@@ -10,6 +10,14 @@ let button = document.getElementById("addexpense");
 let totalElement = document.getElementById("Total");
 let totalSpentElement = document.getElementById("totalSpent");
 let budgetLeftElement = document.getElementById("budgetLeft");
+let searchInput = document.getElementById("searchInput");
+let categoryFilter = document.getElementById("categoryFilter");
+searchInput.addEventListener("input",function(){
+    displayExpenses();
+});
+categoryFilter.addEventListener("change", function() {
+    displayExpenses();
+});
 
 let budget = 25000;
 let budgetLeft = budget;
@@ -45,6 +53,7 @@ button.addEventListener("click", function(event) {
     }
 
     let expense = {
+        id: Date.now(),
         description: description,
         amount: amount,
         Category: Category,
@@ -80,10 +89,38 @@ function updateTotal() {
 function displayExpenses() {
 
     expenseList.innerHTML = "";
+    let searchText = searchInput.value.toLowerCase();
+    let selectedCategory = categoryFilter.value;
 
-    for (let i = 0; i < expenses.length; i++) {
+    let filteredExpenses = expenses.filter(function(expense) {
+    let matchesSearch = expense.description.toLowerCase().includes(searchText);
+    let matchesCategory =
+        selectedCategory === "all" ||
+        expense.Category === selectedCategory;
 
-        let expense = expenses[i];
+    return matchesSearch && matchesCategory;
+});
+
+   if (filteredExpenses.length === 0) {
+        let emptyMessage = document.createElement("p");
+
+        if (expenses.length === 0) {
+        emptyMessage.textContent = "no expense yet";
+        } else {
+        emptyMessage.textContent = "no matching expenses";
+        }
+
+        emptyMessage.className = "empty-message";
+
+        expenseList.appendChild(emptyMessage);
+
+        updateTotal();
+        return;
+    }
+
+    for (let i = 0; i < filteredExpenses.length; i++) {
+
+        let expense = filteredExpenses[i];
 
         let expenseDate = new Date(expense.date + "T00:00:00");
 
@@ -94,28 +131,46 @@ function displayExpenses() {
         });
 
         let newExpense = document.createElement("li");
+        newExpense.className = "expense-item";
 
-        newExpense.textContent =
-            expense.description +
-            " | " +
+        let expenseInfo = document.createElement("div");
+        expenseInfo.className = "expense-info";
+
+        let expenseName = document.createElement("h3");
+        expenseName.textContent =expense.description;
+
+        let expenseDetails =document.createElement("p");
+
+
+        expenseDetails.textContent =
+
             expense.Category +
             " | ₹" +
             expense.amount +
             " | " +
             formattedDate;
 
+        expenseInfo.appendChild(expenseName);
+        expenseInfo.appendChild(expenseDetails);
+
         let deleteButton = document.createElement("button");
 
         deleteButton.textContent = "Delete";
+        deleteButton.className = "delete-button";
 
         deleteButton.addEventListener("click", function() {
-            expenses.splice(i, 1);
+            expenses = expenses.filter(function(item) {
+            return item.id !== expense.id;
+            });
+
             displayExpenses();
         });
 
+        newExpense.appendChild(expenseInfo);
         newExpense.appendChild(deleteButton);
         expenseList.appendChild(newExpense);
     }
 
     updateTotal();
 }
+displayExpenses();
