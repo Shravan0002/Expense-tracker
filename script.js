@@ -12,10 +12,14 @@ let totalSpentElement = document.getElementById("totalSpent");
 let budgetLeftElement = document.getElementById("budgetLeft");
 let searchInput = document.getElementById("searchInput");
 let categoryFilter = document.getElementById("categoryFilter");
+let sortFilter = document.getElementById("sortFilter");
 searchInput.addEventListener("input",function(){
     displayExpenses();
 });
 categoryFilter.addEventListener("change", function() {
+    displayExpenses();
+});
+sortFilter.addEventListener("change", function() {
     displayExpenses();
 });
 
@@ -100,6 +104,32 @@ function displayExpenses() {
 
     return matchesSearch && matchesCategory;
 });
+    let selectedSort = sortFilter.value;
+
+    if (selectedSort === "latest") {
+
+    filteredExpenses.sort(function(a, b) {
+        return new Date(b.date) - new Date(a.date);
+    });
+
+    } else if (selectedSort === "oldest") {
+
+        filteredExpenses.sort(function(a, b) {
+            return new Date(a.date) - new Date(b.date);
+        });
+
+    } else if (selectedSort === "high") {
+
+        filteredExpenses.sort(function(a, b) {
+            return b.amount - a.amount;
+        });
+
+    } else if (selectedSort === "low") {
+
+        filteredExpenses.sort(function(a, b) {
+            return a.amount - b.amount;
+        });
+    }
 
    if (filteredExpenses.length === 0) {
         let emptyMessage = document.createElement("p");
